@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 client_access_token = '0cwbXv2AVjReCZYIxG5U8D0OD0a3SNtPGceMd0EoGIRPvyY4UrRXpTQjkBHCXI2P'
 baas_url = 'https://api.genius.com'
 
-kasutaja_sisend = enterbox("Tere, sisestage artist ja laulu pealkiri, mille lüürikat soovite tsensuurida")
+kasutaja_sisend = enterbox("Tere, sisestage artist ja laulu pealkiri, mille lüürikat soovite tsenseerida")
 kasutaja_sisend = kasutaja_sisend.replace(' ', '-')
 keeled=["Eesti keeles", "Inglise keeles", "Vene keeles"]
 keel=buttonbox("Valitud laul on... ", choices = keeled)
@@ -40,7 +40,8 @@ page = requests.get(page)
 supp = BeautifulSoup(page.text, 'html.parser')
 tulemused = supp.find('div', class_='SongPageGriddesktop-sc-1px5b71-0 Lyrics__Root-sc-1ynbvzw-1 cjSQRu').get_text('\n') #leiab divi, mille sees on laulu sõnad ja liidab need reavahetusega kokku
 tulemused = re.sub(r'\[.*?\]', '', tulemused) #eemaldab ebavajalikud märgid
-artist = supp.find('h1', class_='SongHeaderVariantdesktop__Title-sc-12tszai-7').get_text() #leiab laulu artisti
+divid = supp.find_all('a', class_= 'Link__StyledLink-h3isu4-0') #leiab divid, mis algavad selle clasiiga. igal laulul on oma unikaalne kood classi keskel ning seetõttu ei saa divi otsida täpsemalt
+artist = divid[5].get_text() #leiab laulu artisti sisaldava divi
 pealkiri = supp.find('h1', class_='SongHeaderVariantdesktop__Title-sc-12tszai-7').get_text() #leiab laulu pealkirja
 
 halvadsõnad = [["cum", "fuck","fucker","fucker's","fuckers'","fuckers","fucking","fuckin","fuckin'","motherfucker","motherfuckers","motherfucker's","motherfuckers'","motherfucking",
@@ -70,6 +71,7 @@ def censor(sõnad):
     f = open(artist + " - " + pealkiri + ".txt", encoding="UTF-8", mode="w")
     laused = sõnad.split("\n")
     laused = laused[:-2] #eemaldab 2 viimast rida (share count ja embed)
+    laused = laused[1:] #eemaldab 2 esimest rida (ebavajalik tekst ja tühi koht)
     for lause in laused:
         lõpptulemus = ""
         lause = lause.split(" ")
