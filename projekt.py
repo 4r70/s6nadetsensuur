@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 
 #api jaoks vajalikud asjad
-client_access_token = '0cwbXv2AVjReCZYIxG5U8D0OD0a3SNtPGceMd0EoGIRPvyY4UrRXpTQjkBHCXI2P'
+client_access_token = 'SISESTA_SIIA_OMA_TOKEN'
 baas_url = 'https://api.genius.com'
 
 kasutaja_sisend = enterbox("Tere, sisestage artist ja laulu pealkiri, mille lüürikat soovite tsenseerida")
